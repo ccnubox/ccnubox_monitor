@@ -1,10 +1,9 @@
-启动：
-1,flask project: python manage.py runserver
-2,redis: redis-server --port 6379
-3,celery(main process): celery worker --app xxx.celery --loglevel=info
-4,celery(beat): celery beat --app xxx.celery --loglevel=info
+
+Page:华师匣子监控
+URL: 
+method:GET
 ***
-POST：
+POST:
 
 NONE
 ***
@@ -37,3 +36,15 @@ RETURN:
       
     }
 
+***
+>启动步骤：
+
+>1,flask project: python monitor.py runserver
+
+>2,redis: redis-server --port 6379
+
+>3,celery(main process): celery worker --app xxx.celery --loglevel=info
+
+>4,celery(beat): celery beat --app xxx.celery --loglevel=info
+
+***
