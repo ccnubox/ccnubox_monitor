@@ -31,9 +31,9 @@ b64Vallib = base64.b64encode(Passlib)
 app = Flask(__name__)
 
 #URLS
-url01="https://ccnubox.muxixyz.com/api/info/login/"
-url02="https://ccnubox.muxixyz.com/api/lib/login/"
-url03="https://ccnubox.muxixyz.com/api/lib/search/?keyword=计算机&page=1/"
+url01 = "https://ccnubox.muxixyz.com/api/info/login/"
+url02 = "https://ccnubox.muxixyz.com/api/lib/login/"
+url03 = "https://ccnubox.muxixyz.com/api/lib/search/?keyword=计算机&page=1/"
 url04 = "https://ccnubox.muxixyz.com/api/lib/?id=0000475103"
 url05 = "https://ccnubox.muxixyz.com/api/lib/me/"
 url06 = "https://ccnubox.muxixyz.com/api/table/"
@@ -112,58 +112,58 @@ app.config.update(
             'task':'edit_table',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
         },
-	    'ele_air':{
+        'ele_air':{
             'task':'ele_air',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-	    },
-	    'ele_light':{
+        },
+        'ele_light':{
             'task':'ele_light',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-	    },
-	    'grade_total':{
+        },
+        'grade_total':{
             'task':'grade_total',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-	    },
-	    'grade_detail':{
+        },
+	'grade_detail':{
             'task':'grade_detail',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-	    },
-	    'apartment':{
+        },
+        'apartment':{
             'task':'apartment',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-	    },
-	    'site':{
+        },
+        'site':{
             'task':'site',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-	    },
-	    'info':{
+        },
+        'info':{
             'task':'info',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-	    },
-	    'banner':{
+        },
+        'banner':{
             'task':'banner',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-	    },
-	    'banner_ios':{
+        },
+        'banner_ios':{
             'task':'banner_ios',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-	    },
-	    'calendar':{
+        },
+        'calendar':{
             'task':'calendar',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-	    },
-	    'calendar_ios':{
+        },
+        'calendar_ios':{
             'task':'calendar_ios',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-	    },
-	    'start':{
+        },
+	'start':{
             'task':'start',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-	    },
-	    'product':{
+        },
+        'product':{
             'task':'product',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-	    },
+        },
         'feedback':{
             'task':'feedback',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
