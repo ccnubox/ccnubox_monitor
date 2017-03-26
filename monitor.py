@@ -111,7 +111,7 @@ app.config.update(
 	    'edit_table':{
             'task':'edit_table',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-	    },
+        },
 	    'ele_air':{
             'task':'ele_air',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
@@ -153,8 +153,8 @@ app.config.update(
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
 	    },
 	    'calendar_ios':{
-        'task':'calendar_ios',
-        'schedule':timedelta(seconds = TIME_EVERY_CHECK),
+            'task':'calendar_ios',
+            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
 	    },
 	    'start':{
             'task':'start',
