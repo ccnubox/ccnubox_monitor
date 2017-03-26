@@ -45,8 +45,8 @@ RETURN:
 
 >2,redis: redis-server --port 6379
 
->3,celery(main process): celery worker --app xxx.celery --loglevel=info
+>3,celery(main process): celery worker --app monitor.celery --loglevel=info
 
->4,celery(beat): celery beat --app xxx.celery --loglevel=info
+>4,celery(beat): celery beat --app monitor.celery --loglevel=info
 
 ***
