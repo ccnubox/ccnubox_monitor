@@ -2,10 +2,12 @@
 from __future__ import absolute_import
 import requests
 import base64
+import json
 import redis
 from requests.auth import HTTPBasicAuth
 from celery import Celery
 from flask import Flask,jsonify
+from flask.ext.cache import Cache
 from celery.schedules import crontab
 from datetime import timedelta
 from os import sys,path
@@ -27,13 +29,17 @@ b64Val = base64.b64encode(usrPass)
 Passlib ="2016210942:123456"
 b64Vallib = base64.b64encode(Passlib)
 
+#管理员头部信息
+adminPass = "muxistudio@qq.com:<!--muxi-->"
+b64admin = base64.b64encode(adminPass)
+
 #初始化APP
 app = Flask(__name__)
 
 #URLS
 url01 = "https://ccnubox.muxixyz.com/api/info/login/"
 url02 = "https://ccnubox.muxixyz.com/api/lib/login/"
-url03 = "https://ccnubox.muxixyz.com/api/lib/search/?keyword=计算机&page=1/"
+url03 = "https://ccnubox.muxixyz.com/api/lib/search/?keyword=计算机&page=1"
 url04 = "https://ccnubox.muxixyz.com/api/lib/?id=0000475103"
 url05 = "https://ccnubox.muxixyz.com/api/lib/me/"
 url06 = "https://ccnubox.muxixyz.com/api/table/"
@@ -56,6 +62,8 @@ url22 = "https://ccnubox.muxixyz.com/api/feedback/"
 url23 = "https://ccnubox.muxixyz.com/api/ios/config/"
 url24 = "https://ccnubox.muxixyz.com/api/product/"
 
+#以便返回汉字
+app.config['JSON_AS_ASCII'] = False
 
 #配置
 app.config.update(
@@ -64,12 +72,6 @@ app.config.update(
     CELERY_RESULT_BACKEND='redis://127.0.0.1:6379/0',
     #Timezone
     CELERY_TIMEZONE = 'Asia/Shanghai',
-    #import
-    #CELERY_IMPORTS = (
-    #    'celery_app.tasks'
-    #)
-    #
-    #schedules
 
     CELERYBEAT_SCHEDULE = {
         'login_xinximenhu':{
@@ -124,7 +126,7 @@ app.config.update(
             'task':'grade_total',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
         },
-	'grade_detail':{
+        'grade_detail':{
             'task':'grade_detail',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
         },
@@ -152,11 +154,11 @@ app.config.update(
             'task':'calendar',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
         },
-        'calendar_ios':{
-            'task':'calendar_ios',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-	'start':{
+#        'calendar_ios':{
+#            'task':'calendar_ios',
+#            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
+#        },
+        'start':{
             'task':'start',
             'schedule':timedelta(seconds = TIME_EVERY_CHECK),
         },
@@ -197,7 +199,7 @@ def login_lib():
 #查询图书
 @celery.task(name='find_book')
 def find_book():
-    resp03 = requests.get("https://ccnubox.muxixyz.com/api/lib/search/?keyword=计算机&page=1/")
+    resp03 = requests.get("https://ccnubox.muxixyz.com/api/lib/search/?keyword=计算机&page=1")
     statu03 = resp03.status_code
     r.set(url03,statu03)
 
@@ -229,15 +231,15 @@ def inqu_table():
 @celery.task(name='add_class')
 def add_class():
     post_data={
-            "id":"1",
-            "course":"爱情心理学",
-            "teacher":"余海军",
+            "id":"5",
+            "course":"test",
+            "teacher":"test",
             "weeks":"1,2,3,4",
-            "day":"7",
+            "day":"星期1",
             "start":"1",
             "during":"1",
             "place":"9-11",
-            "remind":0
+            "remind":False
     }
     resp07=requests.post("https://ccnubox.muxixyz.com/api/table/",\
                             params = post_data,\
@@ -249,14 +251,14 @@ def add_class():
 @celery.task(name='add_class_ios')
 def add_class_ios():
     post_data={
-            "course":"爱情心理学",
-            "teacher":"余海军",
+            "course":"test",
+            "teacher":"test",
             "weeks":"1,2,3,4",
-            "day":"7",
-            "start":"1",
-            "during":"1",
-            "place":"9-11",
-            "remind":0
+            "day":"星期1",
+            "start":"3",
+            "during":"2",
+            "place":"9-21",
+            "remind":False
         }
     resp08=requests.post("https://ccnubox.muxixyz.com/api/ios/table/",\
                             params = post_data,\
@@ -267,7 +269,8 @@ def add_class_ios():
 #删除课程 ID 为课程ID
 @celery.task(name='delete_class')
 def delete_class():
-    resp09 = requests.delete("https://ccnubox.muxixyz.com/api/table/5/")
+    resp09 = requests.delete("https://ccnubox.muxixyz.com/api/table/5/",\
+                                        headers = {"Authorization":"Basic %s" %b64Val} )
     statu09=resp09.status_code
     r.set(url09,statu09)
 
@@ -282,9 +285,9 @@ def edit_table():
             "start":"6",
             "during":"2",
             "place":"9-11",
-            "remind":0
+            "remind":False
     }    
-    resp10 = requests.put( "https://ccnubox.muxixyz.com/api/ios/table/5/",\
+    resp10 = requests.put( "https://ccnubox.muxixyz.com/api/table/5/",\
                                         params = post_data ,\
                                         headers = {"Authorization":"Basic %s" %b64Val} )
 
@@ -373,11 +376,11 @@ def calendar():
     r.set(url19,statu19)
 
 #校历IOS
-@celery.task(name='calendar_ios')
-def calendar_ios():
-    resp20 = requests.get("https://ccnubox.muxixyz.com/api/ios/calendar/")
-    statu20 = resp20.status_code
-    r.set(url20,statu20)
+#@celery.task(name='calendar_ios')
+#def calendar_ios():
+#    resp20 = requests.get("https://ccnubox.muxixyz.com/api/ios/calendar/")
+#    statu20 = resp20.status_code
+#    r.set(url20,statu20)
 
 #闪屏
 @celery.task(name='start')
@@ -390,7 +393,8 @@ def start():
 #IOS用户反馈
 @celery.task(name='feedback')
 def feedback():
-    resp22 = requests.get("https://ccnubox.muxixyz.com/api/feedback/")
+    resp22 = requests.get("https://ccnubox.muxixyz.com/api/feedback/",\
+                            headers = {"Authorization":"Basic %s" %b64admin})
     statu22 = resp22.status_code
     r.set(url22,statu22)
     
@@ -410,32 +414,30 @@ def product():
 
 @app.route("/")
 def index():
-   return jsonify({
-            url01:r.get(url01),
-            url02:r.get(url02),
-            url03:r.get(url03),
-            url04:r.get(url04),
-            url05:r.get(url05),
-            url06:r.get(url06),
-            url07:r.get(url07),
-            url08:r.get(url08),
-            url09:r.get(url09),
-            url10:r.get(url10),
-            url11:r.get(url11),
-            url12:r.get(url12),
-            url13:r.get(url13),
-            url14:r.get(url14),
-            url15:r.get(url15),
-            url16:r.get(url16),
-            url17:r.get(url17),
-            url18:r.get(url18),
-            url19:r.get(url19),
-            url20:r.get(url20),
-            url21:r.get(url21),
-            url22:r.get(url22),
-            url23:r.get(url23),
-            url24:r.get(url24),
-            })
-
+    return jsonify({
+        "登录信息门户":r.get(url01),
+        "登录图书馆":r.get(url02),
+        "查询图书":r.get(url03),
+        "图书详情":r.get(url04),
+        "我的图书馆":r.get(url05),
+        "查询课表":r.get(url06),
+        "添加课程":r.get(url07),
+        "IOS添加课程":r.get(url08),
+        "删除课程":r.get(url09),
+        "编辑课表":r.get(url10),
+        "空调电费":r.get(url11),
+        "照明电费":r.get(url12),
+        "成绩查询":r.get(url13),
+        "部门信息":r.get(url14),
+        "常用网站":r.get(url15),
+        "通知公告":r.get(url16),
+        "Banner获取":r.get(url17),
+        "IOSBanner获取":r.get(url18),
+        "校历":r.get(url19),
+        "闪屏":r.get(url21),
+        "IOS用户反馈":r.get(url22),
+        "IOS获取json数据":r.get(url23),
+        "木犀产品展示":r.get(url24),
+    })
 if __name__ =='__main__':
     app.run(debug=True)
