@@ -46,6 +46,7 @@ pool21 = redis.ConnectionPool(host='127.0.0.1', port=6379, db=21)
 pool22 = redis.ConnectionPool(host='127.0.0.1', port=6379, db=22)
 pool23 = redis.ConnectionPool(host='127.0.0.1', port=6379, db=23)
 pool24 = redis.ConnectionPool(host='127.0.0.1', port=6379, db=24)
+
 r01 = redis.StrictRedis(connection_pool=pool01)
 r02 = redis.StrictRedis(connection_pool=pool02)
 r03 = redis.StrictRedis(connection_pool=pool03)
@@ -273,7 +274,7 @@ def grade_detail(i):
     pass;
 
 #部门信息
-def apartment():
+def apartment(i):
     resp14 = requests.get("https://ccnubox.muxixyz.com/api/apartment/")
     statu14 = resp14.status_code
     r14.set(i,statu14)
