@@ -1,5 +1,4 @@
 #coding:utf-8
-from __future__ import absolute_import
 import requests
 import base64
 import json
@@ -14,7 +13,7 @@ from os import sys,path
 from make_celery import make_celery
 from flask_script import Manager 
 
-#
+#每天24h,每小时发送6次
 TOTAL = 144
 
 #每次检查间隔时间
@@ -86,9 +85,6 @@ b64admin = base64.b64encode(adminPass)
 #初始化APP
 app = Flask(__name__)
 
-#初始化Cache
-cache23 = SimpleCache()
-cache24 = SimpleCache()
 #URLS
 url01 = "https://ccnubox.muxixyz.com/api/info/login/"
 url02 = "https://ccnubox.muxixyz.com/api/lib/login/"
@@ -118,115 +114,18 @@ url24 = "https://ccnubox.muxixyz.com/api/product/"
 #以便返回汉字
 app.config['JSON_AS_ASCII'] = False
 
-#配置
+#配置Celery
 app.config.update(
-    
     CELERY_BROKER_URL='redis://127.0.0.1:6379',
     CELERY_RESULT_BACKEND='redis://127.0.0.1:6379/0',
     #Timezone
     CELERY_TIMEZONE = 'Asia/Shanghai',
 
     CELERYBEAT_SCHEDULE = {
-        'login_xinximenhu':{
-            'task': 'login_xinximenhu',
-            'schedule': timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'login_library':{
-            'task':'login_lib',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'find_books':{
-            'task':'find_book',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'booksinfo':{
-            'task':'book_info',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'mylib':{
-            'task':'my_lib',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'inqu_table':{
-            'task':'inqu_table',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'add_classes':{
-            'task':'add_class',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'add_classes_ios':{
-            'task':'add_class_ios',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'delete_class':{
-            'task':'delete_class',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-	    'edit_table':{
-            'task':'edit_table',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'ele_air':{
-            'task':'ele_air',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'ele_light':{
-            'task':'ele_light',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'grade_total':{
-            'task':'grade_total',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'grade_detail':{
-            'task':'grade_detail',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'apartment':{
-            'task':'apartment',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'site':{
-            'task':'site',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'info':{
-            'task':'info',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'banner':{
-            'task':'banner',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'banner_ios':{
-            'task':'banner_ios',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'calendar':{
-            'task':'calendar',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'start':{
-            'task':'start',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'product':{
-            'task':'product',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'feedback':{
-            'task':'feedback',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-        'config_ios':{
-            'task':'config_ios',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-        },
-       'controli':{
-            'task':'controli',
-            'schedule':timedelta(seconds = TIME_EVERY_CHECK),
-       },
+        'main':{
+            'task':'main',
+            'schedule':timedelta(seconds = TIME_EVERY_CHECK)
+        }
     })
 
 #初始化Celery
@@ -235,55 +134,48 @@ celery = make_celery(app)
 #tasks
 
 #信息门户登录
-@celery.task(name='login_xinximenhu')
-def login_xinximenhu():
-    resp01 = requests.get("https://ccnubox.muxixyz.com/api/info/login/",\
+def login_xinximenhu(i):
+    resp01 = requests.get("https://ccnubox.muxixyz.com/api/info/login/",
                             headers = {"Authorization": "Basic %s" %b64Val})
     statu01 = resp01.status_code
     r01.set(i,statu01)
  
 #登录图书馆 
-@celery.task(name='login_lib')
-def login_lib():
-    resp02= requests.get("https://ccnubox.muxixyz.com/api/lib/login/",\
+def login_lib(i):
+    resp02= requests.get("https://ccnubox.muxixyz.com/api/lib/login/",
                             headers = {"Authorization": "Basic %s" %b64Vallib})
     statu02 = resp02.status_code
     r02.set(i,statu02)
 
 #查询图书
-@celery.task(name='find_book')
-def find_book():
+def find_book(i):
     resp03 = requests.get("https://ccnubox.muxixyz.com/api/lib/search/?keyword=计算机&page=1")
     statu03 = resp03.status_code
     r03.set(i,statu03)
 
 #图书详情
-@celery.task(name='book_info')
-def book_info():
+def book_info(i):
     resp04 = requests.get("https://ccnubox.muxixyz.com/api/lib/?id=0000475103")
     statu04 = resp04.status_code
     r04.set(i,statu04)
 
 #我的图书馆
-@celery.task(name='my_lib')
-def my_lib():
-    resp05 = requests.get("https://ccnubox.muxixyz.com/api/lib/me/",\
+def my_lib(i):
+    resp05 = requests.get("https://ccnubox.muxixyz.com/api/lib/me/",
                             headers = {"Authorization": "Basic %s" % b64Vallib})
     statu05 = resp05.status_code
     r05.set(i,statu05)
 
 #查询课表
-@celery.task(name='inqu_table')
-def inqu_table():
-    resp06=requests.get("https://ccnubox.muxixyz.com/api/table/",\
+def inqu_table(i):
+    resp06=requests.get("https://ccnubox.muxixyz.com/api/table/",
                             headers = {"Authorization":"Basic %s" %b64Val})
     statu06 = resp06.status_code
     r06.set(i,statu06)
 
 
 #添加课程
-@celery.task(name='add_class')
-def add_class():
+def add_class(i):
     post_data={
             "id":"5",
             "course":"test",
@@ -295,15 +187,14 @@ def add_class():
             "place":"9-11",
             "remind":False
     }
-    resp07=requests.post("https://ccnubox.muxixyz.com/api/table/",\
-                            params = post_data,\
+    resp07=requests.post("https://ccnubox.muxixyz.com/api/table/",
+                            params = post_data,
                             headers = {"Authorization":"Basic %s" %b64Val} )
     statu07 = resp07.status_code
     r07.set(i,statu07)
 
 #添加课程 For IOS
-@celery.task(name='add_class_ios')
-def add_class_ios():
+def add_class_ios(i):
     post_data={
             "course":"test",
             "teacher":"test",
@@ -314,23 +205,21 @@ def add_class_ios():
             "place":"9-21",
             "remind":False
         }
-    resp08=requests.post("https://ccnubox.muxixyz.com/api/ios/table/",\
-                            params = post_data,\
+    resp08=requests.post("https://ccnubox.muxixyz.com/api/ios/table/",
+                            params = post_data,
                             headers = {"Authorization":"Basic %s" %b64Val} )
     statu08 = resp08.status_code
     r08.set(i,statu08)
 
 #删除课程 ID 为课程ID
-@celery.task(name='delete_class')
-def delete_class():
-    resp09 = requests.delete("https://ccnubox.muxixyz.com/api/table/5/",\
+def delete_class(i):
+    resp09 = requests.delete("https://ccnubox.muxixyz.com/api/table/5/",
                                         headers = {"Authorization":"Basic %s" %b64Val} )
     statu09=resp09.status_code
     r09.set(i,statu09)
 
 #编辑课表
-@celery.task(name='edit_table')
-def edit_table():
+def edit_table(i):
     post_data={
             "course":"爱情心理学",
             "teacher":"余海军",
@@ -341,41 +230,38 @@ def edit_table():
             "place":"9-11",
             "remind":False
     }    
-    resp10 = requests.put( "https://ccnubox.muxixyz.com/api/table/5/",\
-                                        params = post_data ,\
+    resp10 = requests.put( "https://ccnubox.muxixyz.com/api/table/5/",
+                                        params = post_data ,
                                         headers = {"Authorization":"Basic %s" %b64Val} )
 
     statu10=resp10.status_code
     r10.set(i,statu10)
 
 #空调电费查询
-@celery.task(name='ele_air')
-def ele_air():
+def ele_air(i):
     post_data = {
         "dor":"东1-101",
         "type": "air"
     }
-    resp11 = requests.post("https://ccnubox.muxixyz.com/api/ele/",\
+    resp11 = requests.post("https://ccnubox.muxixyz.com/api/ele/",
                                 params = post_data)
     statu11=resp11.status_code
     r11.set(i,statu11)    
 
 #照明电费查询
-@celery.task(name='ele_light')
-def ele_light():
+def ele_light(i):
     post_data = {
         "dor":"东1-101",
         "type": "light"
         }
-    resp12 = requests.post(   "https://ccnubox.muxixyz.com/api/ele/",\
+    resp12 = requests.post(   "https://ccnubox.muxixyz.com/api/ele/",
                                         params = post_data  )
     statu12=resp12.status_code
     r12.set(i,statu12)
 
 #成绩查询
-@celery.task(name='grade_total')
-def grade_total():
-    resp13 = requests.get("https://grade.muxixyz.com/api/grade/search/?xnm=2016&xqm=3/",\
+def grade_total(i):
+    resp13 = requests.get("https://grade.muxixyz.com/api/grade/search/?xnm=2016&xqm=3/",
                             headers = {"Authorization":"Basic %s" %b64Val} )
     
     statu13=resp13.status_code
@@ -383,100 +269,104 @@ def grade_total():
 
 
 #平时成绩查询
-@celery.task(name='grade_detail')
-def grade_detail():
+def grade_detail(i):
     pass;
 
 #部门信息
-@celery.task(name='apartment')
 def apartment():
     resp14 = requests.get("https://ccnubox.muxixyz.com/api/apartment/")
     statu14 = resp14.status_code
     r14.set(i,statu14)
 
 #常用网站
-@celery.task(name='site')
-def site():
+def site(i):
     resp15 = requests.get("https://ccnubox.muxixyz.com/api/site/")
     statu15 = resp15.status_code
     r15.set(i,statu15)
 
 #通知公告
-@celery.task(name='info')
-def info():
+def info(i):
     resp16 = requests.get("https://ccnubox.muxixyz.com/api/info/")
     statu16 = resp16.status_code
     r16.set(i,statu16)
 
 #Banner获取
-@celery.task(name='banner')
-def banner():
+def banner(i):
     resp17 = requests.get("https://ccnubox.muxixyz.com/api/banner/")
     statu17 = resp17.status_code
     r17.set(i,statu17)
 
 #Banner获取IOS
-@celery.task(name='banner_ios')
-def banner_ios():
+def banner_ios(i):
     resp18 = requests.get("https://ccnubox.muxixyz.com/api/ios/banner/") 
     statu18 = resp18.status_code
     r18.set(i,statu18)
 
 #校历
-@celery.task(name='calendar')
-def calendar():
+def calendar(i):
     resp19 = requests.get("https://ccnubox.muxixyz.com/api/calendar/")
     statu19 = resp19.status_code
     r19.set(i,statu19)
 
-#校历IOS
-#@celery.task(name='calendar_ios')
-#def calendar_ios():
-#    resp20 = requests.get("https://ccnubox.muxixyz.com/api/ios/calendar/")
-#    statu20 = resp20.status_code
-#    r.set(url20,statu20)
-
 #闪屏
-@celery.task(name='start')
-def start():
+def start(i):
     resp21 = requests.get("https://ccnubox.muxixyz.com/api/start/")
     statu21 = resp21.status_code
     r21.set(i,statu21)
 
 
 #IOS用户反馈
-@celery.task(name='feedback')
-def feedback():
-    resp22 = requests.get("https://ccnubox.muxixyz.com/api/feedback/",\
+def feedback(i):
+    resp22 = requests.get("https://ccnubox.muxixyz.com/api/feedback/",
                             headers = {"Authorization":"Basic %s" %b64admin})
     statu22 = resp22.status_code
     r22.set(i,statu22)
     
 #获取IOS json数据
-@celery.task(name='config_ios')
-def config_ios():
+def config_ios(i):
     resp23 = requests.get("https://ccnubox.muxixyz.com/api/ios/config/")
     statu23 = resp23.status_code
     r23.set(i,statu23)
 
 #木犀产品展示
-@celery.task(name='product')
-def product():
+def product(i):
     resp24 = requests.get("https://ccnubox.muxixyz.com/api/product/")
     statu24 = resp24.status_code
     r24.set(i,statu24)
 
-
-@celery.task(name='controli')
-def controli():
+@celery.task(name = 'main')
+def main():
     global i
+    
+    login_xinximenhu(i)
+    login_lib(i)
+    find_book(i)
+    book_info(i)
+    my_lib(i)
+    inqu_table(i)
+    add_class(i)
+    add_class_ios(i)
+    delete_class(i)
+    edit_table(i)
+    ele_air(i)
+    ele_light(i)
+    grade_total(i)
+    apartment(i)
+    site(i)
+    info(i)
+    banner(i)
+    banner_ios(i)
+    calendar(i)
+    start(i)
+    feedback(i)
+    config_ios(i)
+    product(i)
+    
     if i<TOTAL-1:
         i = i + 1
     elif i==TOTAL-1:
         i = 0
-     
-        
-
+    
 
 @app.route("/")
 def index():
