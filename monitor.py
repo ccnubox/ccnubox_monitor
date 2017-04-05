@@ -6,7 +6,6 @@ import redis
 from requests.auth import HTTPBasicAuth
 from celery import Celery
 from flask import Flask,jsonify
-from werkzeug.contrib.cache import SimpleCache
 from celery.schedules import crontab
 from datetime import timedelta
 from os import sys,path
@@ -17,7 +16,7 @@ from flask_script import Manager
 TOTAL = 144
 
 #每次检查间隔时间
-TIME_EVERY_CHECK=10
+TIME_EVERY_CHECK=600
 
 #set i
 i = 0
@@ -372,29 +371,29 @@ def main():
 @app.route("/")
 def index():
     return jsonify({
-            "信息门户登录":[r01.get(k) for k in range(144)],
-            "登录图书馆":[r02.get(k) for k in range(144)],
-            "查询图书":[r03.get(k) for k in range(144)],
-            "图书详情":[r04.get(k) for k in range(144)],
-            "我的图书馆":[r05.get(k) for k in range(144)],
-            "查询课表":[r06.get(k) for k in range(144)],
-            "添加课程":[r07.get(k) for k in range(144)],
-            "添加课程IOS":[r08.get(k) for k in range(144)],
-            "删除课程":[r09.get(k) for k in range(144)],
-            "编辑课表":[r10.get(k) for k in range(144)],
-            "空调电费":[r11.get(k) for k in range(144)],
-            "照明电费":[r12.get(k) for k in range(144)],
-            "成绩查询":[r13.get(k) for k in range(144)],
-            "部门信息":[r14.get(k) for k in range(144)],
-            "常用网站":[r15.get(k) for k in range(144)],
-            "通知公告":[r16.get(k) for k in range(144)],
-            "获取Banner":[r17.get(k) for k in range(144)],
-            "获取BannerIOS":[r18.get(k) for k in range(144)],
-            "校历":[r19.get(k) for k in range(144)],
-            "闪屏":[r21.get(k) for k in range(144)],
-            "用户反馈IOS":[r22.get(k) for k in range(144)],
-            "获取IOSJson数据":[r23.get(k) for k in range(144)],
-            "木犀产品展示":[r24.get(k) for k in range(144)],
+            "login_xinximenhu":[r01.get(k) for k in range(144)],
+            "login_lib":[r02.get(k) for k in range(144)],
+            "inquire_book":[r03.get(k) for k in range(144)],
+            "book's infomation":[r04.get(k) for k in range(144)],
+            "my_lib":[r05.get(k) for k in range(144)],
+            "inquire_classes_table":[r06.get(k) for k in range(144)],
+            "add_class":[r07.get(k) for k in range(144)],
+            "add_class_for_IOS":[r08.get(k) for k in range(144)],
+            "delete_class":[r09.get(k) for k in range(144)],
+            "edit_class":[r10.get(k) for k in range(144)],
+            "air_electricity":[r11.get(k) for k in range(144)],
+            "light_electricity":[r12.get(k) for k in range(144)],
+            "inquire_grades":[r13.get(k) for k in range(144)],
+            "apartment_infomation":[r14.get(k) for k in range(144)],
+            "useful_websites":[r15.get(k) for k in range(144)],
+            "announcement":[r16.get(k) for k in range(144)],
+            "get_Banner":[r17.get(k) for k in range(144)],
+            "get_Banner_for_IOS":[r18.get(k) for k in range(144)],
+            "calendar":[r19.get(k) for k in range(144)],
+            "start":[r21.get(k) for k in range(144)],
+            "feedback_for_IOS":[r22.get(k) for k in range(144)],
+            "get_json_for_IOS":[r23.get(k) for k in range(144)],
+            "muxi's_products":[r24.get(k) for k in range(144)],
             })
 if __name__ =='__main__':
-    app.run(debug=True)
+    app.run(debug=True,host='0.0.0.0',port=5001)
