@@ -1,7 +1,7 @@
 
 Page:华师匣子监控
 
-URL: 
+URL: [monitor](http://119.29.147.14/) http://119.29.147.14
 
 method:GET
 ***
