@@ -1,0 +1,57 @@
+[uWSGI] getting INI configuration from uwsgi.ini
+*** Starting uWSGI 2.0.14 (64bit) on [Sat Apr 15 16:07:20 2017] ***
+compiled with version: 5.4.0 20160609 on 28 March 2017 10:15:36
+os: Linux-4.4.0-53-generic #74-Ubuntu SMP Fri Dec 2 15:59:10 UTC 2016
+nodename: VM-186-15-ubuntu
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 1
+current working directory: /home/ubuntu/ccnubox_monitor
+detected binary path: /home/ubuntu/.local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+*** WARNING: you are running uWSGI without its master process manager ***
+your processes number limit is 3308
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+probably another instance of uWSGI is running on the same address (127.0.0.1:6001).
+bind(): Address already in use [core/socket.c line 769]
+[uWSGI] getting INI configuration from uwsgi.ini
+*** Starting uWSGI 2.0.14 (64bit) on [Sat Apr 15 16:07:39 2017] ***
+compiled with version: 5.4.0 20160609 on 28 March 2017 10:15:36
+os: Linux-4.4.0-53-generic #74-Ubuntu SMP Fri Dec 2 15:59:10 UTC 2016
+nodename: VM-186-15-ubuntu
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 1
+current working directory: /home/ubuntu/ccnubox_monitor
+detected binary path: /home/ubuntu/.local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+*** WARNING: you are running uWSGI without its master process manager ***
+your processes number limit is 3308
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+probably another instance of uWSGI is running on the same address (127.0.0.1:6001).
+bind(): Address already in use [core/socket.c line 769]
+[uWSGI] getting INI configuration from uwsgi.ini
+*** Starting uWSGI 2.0.14 (64bit) on [Sat Apr 15 16:07:43 2017] ***
+compiled with version: 5.4.0 20160609 on 28 March 2017 10:15:36
+os: Linux-4.4.0-53-generic #74-Ubuntu SMP Fri Dec 2 15:59:10 UTC 2016
+nodename: VM-186-15-ubuntu
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 1
+current working directory: /home/ubuntu/ccnubox_monitor
+detected binary path: /home/ubuntu/.local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+*** WARNING: you are running uWSGI without its master process manager ***
+your processes number limit is 3308
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+probably another instance of uWSGI is running on the same address (127.0.0.1:6001).
+bind(): Address already in use [core/socket.c line 769]

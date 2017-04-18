@@ -188,7 +188,7 @@ def add_class(i):
             "remind":False
     }
     resp07=requests.post("https://ccnubox.muxixyz.com/api/table/",
-                            params = post_data,
+                            json = post_data,
                             headers = {"Authorization":"Basic %s" %b64Val} )
     statu07 = resp07.status_code
     r07.set(i,statu07)
@@ -206,7 +206,7 @@ def add_class_ios(i):
             "remind":False
         }
     resp08=requests.post("https://ccnubox.muxixyz.com/api/ios/table/",
-                            params = post_data,
+                            json = post_data,
                             headers = {"Authorization":"Basic %s" %b64Val} )
     statu08 = resp08.status_code
     r08.set(i,statu08)
@@ -231,7 +231,7 @@ def edit_table(i):
             "remind":False
     }    
     resp10 = requests.put( "https://ccnubox.muxixyz.com/api/table/5/",
-                                        params = post_data ,
+                                        json = post_data ,
                                         headers = {"Authorization":"Basic %s" %b64Val} )
 
     statu10=resp10.status_code
@@ -243,8 +243,7 @@ def ele_air(i):
         "dor":"东1-101",
         "type": "air"
     }
-    resp11 = requests.post("https://ccnubox.muxixyz.com/api/ele/",
-                                params = post_data)
+    resp11 = requests.post("https://ccnubox.muxixyz.com/api/ele/",json = post_data)
     statu11=resp11.status_code
     r11.set(i,statu11)    
 
@@ -254,8 +253,7 @@ def ele_light(i):
         "dor":"东1-101",
         "type": "light"
         }
-    resp12 = requests.post(   "https://ccnubox.muxixyz.com/api/ele/",
-                                        params = post_data  )
+    resp12 = requests.post(   "https://ccnubox.muxixyz.com/api/ele/",json = post_data  )
     statu12=resp12.status_code
     r12.set(i,statu12)
 
@@ -346,8 +344,8 @@ def main():
     inqu_table(i)
     add_class(i)
     add_class_ios(i)
-    delete_class(i)
     edit_table(i)
+    delete_class(i)
     ele_air(i)
     ele_light(i)
     grade_total(i)
@@ -374,7 +372,7 @@ def index():
             "login_xinximenhu":[r01.get(k) for k in range(144)],
             "login_lib":[r02.get(k) for k in range(144)],
             "inquire_book":[r03.get(k) for k in range(144)],
-            "book's infomation":[r04.get(k) for k in range(144)],
+            "book's_infomation":[r04.get(k) for k in range(144)],
             "my_lib":[r05.get(k) for k in range(144)],
             "inquire_classes_table":[r06.get(k) for k in range(144)],
             "add_class":[r07.get(k) for k in range(144)],
