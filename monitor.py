@@ -379,7 +379,7 @@ def index():
             "login_xinximenhu":[r01.get(k) for k in range(144)],
             "login_lib":[r02.get(k) for k in range(144)],
             "inquire_book":[r03.get(k) for k in range(144)],
-            "book's infomation":[r04.get(k) for k in range(144)],
+            "book's_infomation":[r04.get(k) for k in range(144)],
             "my_lib":[r05.get(k) for k in range(144)],
             "inquire_classes_table":[r06.get(k) for k in range(144)],
             "add_class":[r07.get(k) for k in range(144)],
