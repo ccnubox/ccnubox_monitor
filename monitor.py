@@ -72,9 +72,9 @@ r24 = redis.StrictRedis(connection_pool=pool24)
 
 #信息门户头部信息:貌似有两套头部信息...
 login_info_header = {
-    'Bigipserverpool_Jwc_Xk':'139503808.20480.0000'
-    'Sid':'2014210761'
-    'Jsessionid': 'B6A6DF5C48AB4AD4C4001572D2611809'
+    'Bigipserverpool_Jwc_Xk': '139503808.20480.0000',
+    'Sid': '2014210761',
+    'Jsessionid': 'B6A6DF5C48AB4AD4C4001572D2611809',
     'Authorization': "Basic Base64(sid:pwd)"
 }
 
