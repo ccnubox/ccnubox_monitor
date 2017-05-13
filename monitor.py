@@ -16,7 +16,7 @@ from flask_script import Manager
 TOTAL = 144
 
 #每次检查间隔时间
-TIME_EVERY_CHECK=600
+TIME_EVERY_CHECK=10
 
 #set i
 i = 0
@@ -70,9 +70,18 @@ r22 = redis.StrictRedis(connection_pool=pool22)
 r23 = redis.StrictRedis(connection_pool=pool23)
 r24 = redis.StrictRedis(connection_pool=pool24)
 
-#信息门户头部信息
+#信息门户头部信息:貌似有两套头部信息...
+login_info_header = {
+    'Bigipserverpool_Jwc_Xk':'139503808.20480.0000'
+    'Sid':'2014210761'
+    'Jsessionid': 'B6A6DF5C48AB4AD4C4001572D2611809'
+    'Authorization': "Basic Base64(sid:pwd)"
+}
+
 usrPass = "2016210942:130395"
 b64Val = base64.b64encode(usrPass)
+
+
 
 #图书馆头部信息
 Passlib ="2016210942:123456"
@@ -177,7 +186,6 @@ def inqu_table(i):
 #添加课程
 def add_class(i):
     post_data={
-            "id":"5",
             "course":"test",
             "teacher":"test",
             "weeks":"1,2,3,4",
@@ -188,8 +196,8 @@ def add_class(i):
             "remind":False
     }
     resp07=requests.post("https://ccnubox.muxixyz.com/api/table/",
-                            params = post_data,
-                            headers = {"Authorization":"Basic %s" %b64Val} )
+                            json = post_data,
+                            headers = login_info_header)
     statu07 = resp07.status_code
     r07.set(i,statu07)
 
@@ -206,7 +214,7 @@ def add_class_ios(i):
             "remind":False
         }
     resp08=requests.post("https://ccnubox.muxixyz.com/api/ios/table/",
-                            params = post_data,
+                            json =  post_data,
                             headers = {"Authorization":"Basic %s" %b64Val} )
     statu08 = resp08.status_code
     r08.set(i,statu08)
@@ -214,24 +222,24 @@ def add_class_ios(i):
 #删除课程 ID 为课程ID
 def delete_class(i):
     resp09 = requests.delete("https://ccnubox.muxixyz.com/api/table/5/",
-                                        headers = {"Authorization":"Basic %s" %b64Val} )
+                                        headers = login_info_header)
     statu09=resp09.status_code
     r09.set(i,statu09)
 
 #编辑课表
 def edit_table(i):
     post_data={
-            "course":"爱情心理学",
-            "teacher":"余海军",
+            "course":"test",
+            "teacher":"test",
             "weeks":"1,2,3,4",
-            "day":"6",
-            "start":"6",
+            "day":"星期一",
+            "start":"3",
             "during":"2",
             "place":"9-11",
             "remind":False
     }    
     resp10 = requests.put( "https://ccnubox.muxixyz.com/api/table/5/",
-                                        params = post_data ,
+                                        json = post_data ,
                                         headers = {"Authorization":"Basic %s" %b64Val} )
 
     statu10=resp10.status_code
@@ -243,8 +251,7 @@ def ele_air(i):
         "dor":"东1-101",
         "type": "air"
     }
-    resp11 = requests.post("https://ccnubox.muxixyz.com/api/ele/",
-                                params = post_data)
+    resp11 = requests.post("https://ccnubox.muxixyz.com/api/ele/",json = post_data)
     statu11=resp11.status_code
     r11.set(i,statu11)    
 
@@ -254,19 +261,17 @@ def ele_light(i):
         "dor":"东1-101",
         "type": "light"
         }
-    resp12 = requests.post(   "https://ccnubox.muxixyz.com/api/ele/",
-                                        params = post_data  )
+    resp12 = requests.post("https://ccnubox.muxixyz.com/api/ele/",json = post_data  )
     statu12=resp12.status_code
     r12.set(i,statu12)
 
 #成绩查询
 def grade_total(i):
-    resp13 = requests.get("https://grade.muxixyz.com/api/grade/search/?xnm=2016&xqm=3/",
-                            headers = {"Authorization":"Basic %s" %b64Val} )
+    resp13 = requests.get("https://grade.muxixyz.com//api/grade/?xnm=2015&xqm=3",
+                            headers = login_info_header)
     
     statu13=resp13.status_code
     r13.set(i,statu13)
-
 
 #平时成绩查询
 def grade_detail(i):
@@ -317,7 +322,7 @@ def start(i):
 
 #IOS用户反馈
 def feedback(i):
-    resp22 = requests.get("https://ccnubox.muxixyz.com/api/feedback/",
+    resp22 = requests.get("https://ccnubox.muxixyz.com/api/feedbacks/",
                             headers = {"Authorization":"Basic %s" %b64admin})
     statu22 = resp22.status_code
     r22.set(i,statu22)
@@ -346,8 +351,8 @@ def main():
     inqu_table(i)
     add_class(i)
     add_class_ios(i)
-    delete_class(i)
     edit_table(i)
+    delete_class(i)
     ele_air(i)
     ele_light(i)
     grade_total(i)
