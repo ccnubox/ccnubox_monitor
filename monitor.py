@@ -178,7 +178,8 @@ def my_lib(i):
 #查询课表
 def inqu_table(i):
     resp06=requests.get("https://ccnubox.muxixyz.com/api/table/",
-                            headers = {"Authorization":"Basic %s" %b64Val})
+                                        headers = login_info_header)
+				#headers = {"Authorization":"Basic %s" %b64Val})
     statu06 = resp06.status_code
     r06.set(i,statu06)
 
@@ -200,6 +201,11 @@ def add_class(i):
                             headers = login_info_header)
     statu07 = resp07.status_code
     r07.set(i,statu07)
+    
+    json_data = resp07.json()
+    global class_id
+    class_id = json_data["id"]
+    class_id = str(class_id)
 
 #添加课程 For IOS
 def add_class_ios(i):
@@ -221,7 +227,7 @@ def add_class_ios(i):
 
 #删除课程 ID 为课程ID
 def delete_class(i):
-    resp09 = requests.delete("https://ccnubox.muxixyz.com/api/table/5/",
+    resp09 = requests.delete("https://ccnubox.muxixyz.com/api/table/"+class_id+"/",
                                         headers = login_info_header)
     statu09=resp09.status_code
     r09.set(i,statu09)
@@ -238,9 +244,10 @@ def edit_table(i):
             "place":"9-11",
             "remind":False
     }    
-    resp10 = requests.put( "https://ccnubox.muxixyz.com/api/table/5/",
+    resp10 = requests.put( "https://ccnubox.muxixyz.com/api/table/"+class_id+"/",
                                         json = post_data ,
-                                        headers = {"Authorization":"Basic %s" %b64Val} )
+                                        headers = login_info_header)
+                                       # headers = {"Authorization":"Basic %s" %b64Val} )
 
     statu10=resp10.status_code
     r10.set(i,statu10)
