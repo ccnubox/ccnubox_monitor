@@ -16,7 +16,7 @@ from flask_script import Manager
 TOTAL = 144
 
 #每次检查间隔时间
-TIME_EVERY_CHECK=10
+TIME_EVERY_CHECK=600
 
 #set i
 i = 0
