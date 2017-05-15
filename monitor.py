@@ -291,7 +291,7 @@ def site(i):
 
 #通知公告
 def info(i):
-    resp16 = requests.get("https://ccnubox.muxixyz.com/api/info/")
+    resp16 = requests.get("https://ccnubox.muxixyz.com/api/webview_info/")
     statu16 = resp16.status_code
     r16.set(i,statu16)
 
