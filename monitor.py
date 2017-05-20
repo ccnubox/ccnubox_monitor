@@ -70,14 +70,7 @@ r22 = redis.StrictRedis(connection_pool=pool22)
 r23 = redis.StrictRedis(connection_pool=pool23)
 r24 = redis.StrictRedis(connection_pool=pool24)
 
-#信息门户头部信息:貌似有两套头部信息...
-login_info_header = {
-    'Bigipserverpool_Jwc_Xk': '139503808.20480.0000',
-    'Sid': '2014210761',
-    'Jsessionid': 'B6A6DF5C48AB4AD4C4001572D2611809',
-    'Authorization': "Basic Base64(sid:pwd)"
-}
-
+#信息门户头部信息:
 usrPass = "2016210942:130395"
 b64Val = base64.b64encode(usrPass)
 
@@ -142,12 +135,29 @@ celery = make_celery(app)
 
 #tasks
 
-#信息门户登录
+
+#信息门户登录 AND 得到Cookie
 def login_xinximenhu(i):
     resp01 = requests.get("https://ccnubox.muxixyz.com/api/info/login/",
                             headers = {"Authorization": "Basic %s" %b64Val})
     statu01 = resp01.status_code
     r01.set(i,statu01)
+    
+    #json
+    json = resp01.json()
+    cookie = json['cookie']
+    jwcinfo = str(cookie['BIGipServerpool_jwc_xk'])
+    jsessionid = str(cookie['JSESSIONID'])
+    
+    global login_info_header
+    login_info_header = {
+        'Bigipserverpool_Jwc_Xk':jwcinfo,
+        'Sid':'2016210942',
+        'Jsessionid':jsessionid,
+        'Authorization':"Basic Base64(sid:pwd)"
+    }
+    
+
  
 #登录图书馆 
 def login_lib(i):
@@ -178,7 +188,7 @@ def my_lib(i):
 #查询课表
 def inqu_table(i):
     resp06=requests.get("https://ccnubox.muxixyz.com/api/table/",
-                            headers = {"Authorization":"Basic %s" %b64Val})
+                                        headers = login_info_header)
     statu06 = resp06.status_code
     r06.set(i,statu06)
 
