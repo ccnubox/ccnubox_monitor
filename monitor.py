@@ -175,7 +175,7 @@ def find_book(i):
 #图书详情
 def book_info(i):
     resp04 = requests.get("https://ccnubox.muxixyz.com/api/lib/?id=0000475103")
-    statu04 = resp04.status_code
+    statu06 = resp04.status_code
     r04.set(i,statu04)
 
 #我的图书馆
@@ -256,8 +256,6 @@ def edit_table(i):
     resp10 = requests.put( "https://ccnubox.muxixyz.com/api/table/"+class_id+"/",
                                         json = post_data ,
                                         headers = login_info_header)
-                                       # headers = {"Authorization":"Basic %s" %b64Val} )
-
     statu10=resp10.status_code
     r10.set(i,statu10)
 
@@ -283,7 +281,7 @@ def ele_light(i):
 
 #成绩查询
 def grade_total(i):
-    resp13 = requests.get("https://grade.muxixyz.com//api/grade/?xnm=2015&xqm=3",
+    resp13 = requests.get("https://grade.muxixyz.com//api/grade/?xnm=2016&xqm=1",
                             headers = login_info_header)
     
     statu13=resp13.status_code
