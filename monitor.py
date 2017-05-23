@@ -138,17 +138,39 @@ celery = make_celery(app)
 
 #信息门户登录 AND 得到Cookie
 def login_xinximenhu(i):
+    #得到 status code
     resp01 = requests.get("https://ccnubox.muxixyz.com/api/info/login/",
                             headers = {"Authorization": "Basic %s" %b64Val})
     statu01 = resp01.status_code
     r01.set(i,statu01)
+   
+    #因为这个网站登陆时有三个重定向，所以需要模拟这个过程
+    #才能得到正确的cookie
+    info_login_url = "http://portal.ccnu.edu.cn/loginAction.do"
+    link_url = "http://portal.ccnu.edu.cn/roamingAction.do?appId=XK"
+    login_ticket_url = "http://122.204.187.6/xtgl/login_tickitLogin.html"
+    headers = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36",
+    }
+
+    post_data = {
+    'userName': 2016210942, 
+    'userPass': 130395
+    }
+
+    s = requests.Session()
+    r = s.post(info_login_url,data = post_data,headers=headers)
+
+    if r.text.split('"')[1] == 'index_jg.jsp':
     
-    #json
-    json = resp01.json()
-    cookie = json['cookie']
-    jwcinfo = str(cookie['BIGipServerpool_jwc_xk'])
-    jsessionid = str(cookie['JSESSIONID'])
-    
+        r_second = s.get(link_url,timeout = 4)
+        r_third = s.get(login_ticket_url,timeout = 4)        
+        ret3 = s.__dict__
+        cookies = ret3['cookies']
+        jwcinfo = cookies2['BIGipServerpool_jwc_xk']
+        jsessionid = cookies2.values()[1]
+   
+
     global login_info_header
     login_info_header = {
         'Bigipserverpool_Jwc_Xk':jwcinfo,
