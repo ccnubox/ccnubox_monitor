@@ -13,12 +13,12 @@ RETURN:
 
     {
       "add_class": [
-        200,   #x144 statu_code
+        200,   
         200,
         500,
         ...
         ...
-        200
+        200         #NOTE:共有144个状态码(24小时*6次)
         ],
       "add_class_for_IOS": [
         200,
