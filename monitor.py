@@ -167,8 +167,8 @@ def login_xinximenhu(i):
         r_third = s.get(login_ticket_url,timeout = 4)        
         ret3 = s.__dict__
         cookies = ret3['cookies']
-        jwcinfo = cookies2['BIGipServerpool_jwc_xk']
-        jsessionid = cookies2.values()[1]
+        jwcinfo = cookies['BIGipServerpool_jwc_xk']
+        jsessionid = cookies.values()[1]
    
 
     global login_info_header
@@ -197,7 +197,7 @@ def find_book(i):
 #图书详情
 def book_info(i):
     resp04 = requests.get("https://ccnubox.muxixyz.com/api/lib/?id=0000475103")
-    statu06 = resp04.status_code
+    statu04 = resp04.status_code
     r04.set(i,statu04)
 
 #我的图书馆
