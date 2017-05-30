@@ -408,33 +408,64 @@ def main():
     elif i==TOTAL-1:
         i = 0
     
+def proportion(red):
+    ok_num = 0
+    statu_list = [red.get(k) for k in range(144)]
+    count200 = statu_list.count("200")
+    count201 = statu_list.count("201")
+    count_all = count200 + count201
+    proportion = (count_all*100) / TOTAL
+    return proportion
 
 @app.route("/")
 def index():
     return jsonify({
             "login_xinximenhu":[r01.get(k) for k in range(144)],
+            "login_xinximenhu_rate(percentage)":proportion(r01),
             "login_lib":[r02.get(k) for k in range(144)],
+            "login_lib_rate(percentage)":proportion(r02),
             "inquire_book":[r03.get(k) for k in range(144)],
+            "inquire_book_rate(percentage)":proportion(r03),
             "book's_infomation":[r04.get(k) for k in range(144)],
+            "book's_infomation_rate(percentage)":proportion(r04),
             "my_lib":[r05.get(k) for k in range(144)],
+            "my_lib_rate(percentage)":proportion(r05),
             "inquire_classes_table":[r06.get(k) for k in range(144)],
+            "inquire_classes_table_rate(percentage)":proportion(r06),
             "add_class":[r07.get(k) for k in range(144)],
+            "add_class_rate(percentage)":proportion(r07),
             "add_class_for_IOS":[r08.get(k) for k in range(144)],
+            "add_class_for_IOS_rate(percentage)":proportion(r08),
             "delete_class":[r09.get(k) for k in range(144)],
+            "delete_class_rate(percentage)":proportion(r09),
             "edit_class":[r10.get(k) for k in range(144)],
+            "edit_class_rate(percentage)":proportion(r10),
             "air_electricity":[r11.get(k) for k in range(144)],
+            "air_electricity_rate(percentage)":proportion(r11),
             "light_electricity":[r12.get(k) for k in range(144)],
+            "light_electricity_rate(percentage)":proportion(r12),
             "inquire_grades":[r13.get(k) for k in range(144)],
+            "inquire_grades_rate(percentage)":proportion(r13),
             "apartment_infomation":[r14.get(k) for k in range(144)],
+            "apartment_infomation_rate(percentage)":proportion(r14),
             "useful_websites":[r15.get(k) for k in range(144)],
+            "useful_websites_rate(percentage)":proportion(r15),
             "announcement":[r16.get(k) for k in range(144)],
+            "announcement_rate(percentage)":proportion(r16),
             "get_Banner":[r17.get(k) for k in range(144)],
+            "get_Banner_rate(percentage)":proportion(r17),
             "get_Banner_for_IOS":[r18.get(k) for k in range(144)],
+            "get_Banner_for_IOS_rate(percentage)":proportion(r18),
             "calendar":[r19.get(k) for k in range(144)],
+            "calendar_rate(percentage)":proportion(r19),
             "start":[r21.get(k) for k in range(144)],
+            "start_rate(percentage)":proportion(r21),
             "feedback_for_IOS":[r22.get(k) for k in range(144)],
+            "feedback_for_IOS_rate(percentage)":proportion(r22),
             "get_json_for_IOS":[r23.get(k) for k in range(144)],
+            "get_json_for_IOS_rate(percentage)":proportion(r23),
             "muxi's_products":[r24.get(k) for k in range(144)],
+            "muxi's_products_rate(percentage)":proportion(r24),
             })
 if __name__ =='__main__':
     app.run(debug=True,host='0.0.0.0',port=5001)
